@@ -34,17 +34,18 @@ export default async function handler(req, res) {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-3-5-haiku-20241022',
-        max_tokens: 1200,
-        temperature: 0.4,
-        messages: [
-          {
-            role: 'user',
-            content: `${instruction}\n\nالنص:\n${text}`
-          }
-        ]
-      } )
-    });
+  model: 'claude-3-5-haiku-20241022',
+  max_tokens: 1200,
+  temperature: 0.4,
+  system: instruction,
+  messages: [
+    {
+      role: 'user',
+      content: text
+    }
+  ]
+})
+
 
     const data = await response.json();
 
