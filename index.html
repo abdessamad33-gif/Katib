@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>كاتب - أداة تحسين الكتابة العربية</title>
+  <meta name="description" content="كاتب أداة عربية تساعدك على تصحيح وتحسين وتبسيط النصوص العربية." />
+  <style>
+    :root {
+      --bg: #191611;
+      --panel: #24211c;
+      --panel-2: #2d2922;
+      --text: #f7f2e8;
+      --muted: #b8b0a3;
+      --gold: #b89a39;
+      --accent: #ffb59f;
+      --border: rgba(184, 154, 57, 0.32);
+      --danger: #ff6b6b;
+      --success: #8be28b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #2b2419 0%, var(--bg) 45%, #0f0d0a 100%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+      line-height: 1.8;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(25, 22, 17, 0.82);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .nav {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 28px;
+      letter-spacing: -0.03em;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--gold);
+      box-shadow: 0 0 20px rgba(184, 154, 57, 0.75);
+    }
+
+    .usage {
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      background: rgba(36, 33, 28, 0.65);
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 42px 20px 64px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border);
+      color: var(--gold);
+      border-radius: 999px;
+      padding: 6px 18px;
+      background: rgba(184, 154, 57, 0.08);
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(38px, 9vw, 72px);
+      line-height: 1.25;
+      letter-spacing: -0.06em;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+      display: block;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: clamp(17px, 4vw, 24px);
+      margin: 22px auto 0;
+      max-width: 720px;
+    }
+
+    .modes {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 34px 0;
+    }
+
+    .mode {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      background: rgba(45, 41, 34, 0.9);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .mode:hover,
+    .mode.active {
+      border-color: var(--gold);
+      background: rgba(184, 154, 57, 0.18);
+      color: #fff7d8;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    .field {
+      background: rgba(36, 33, 28, 0.84);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 12px;
+      font-weight: 800;
+      color: #eee5d6;
+      font-size: 18px;
+    }
+
+    textarea,
+    .output {
+      width: 100%;
+      min-height: 230px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      background: #2b2a28;
+      color: var(--text);
+      padding: 18px;
+      resize: vertical;
+      font: inherit;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(184, 154, 57, 0.12);
+    }
+
+    textarea::placeholder,
+    .output.empty {
+      color: #8d877e;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+      align-items: center;
+    }
+
+    .primary,
+    .secondary {
+      border: 0;
+      border-radius: 16px;
+      padding: 13px 22px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .primary {
+      background: linear-gradient(135deg, var(--gold), #f0d372);
+      color: #18130b;
+    }
+
+    .primary:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .status {
+      min-height: 28px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .status.error {
+      color: var(--danger);
+    }
+
+    .status.success {
+      color: var(--success);
+    }
+
+    footer {
+      text-align: center;
+      color: #8f877a;
+      padding: 0 20px 40px;
+      font-size: 14px;
+    }
+
+    @media (min-width: 820px) {
+      .workspace {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="brand"><span>كاتب</span><span class="dot"></span></div>
+      <div class="usage" id="usage">استخدامات اليوم: 0 / 5</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="badge">ذكاء اصطناعي عربي</div>
+      <h1>اكتب بثقة،<span>نحسّن معك</span></h1>
+      <p class="subtitle">أداة ذكية تصحح وتحسن كتابتك العربية في ثوان.</p>
+    </section>
+
+    <section class="modes" aria-label="أنواع التحسين">
+      <button class="mode active" data-mode="grammar">تصحيح إملائي ونحوي</button>
+      <button class="mode" data-mode="style">تحسين الأسلوب</button>
+      <button class="mode" data-mode="simplify">تبسيط النص</button>
+      <button class="mode" data-mode="formal">تحويل لرسمي</button>
+      <button class="mode" data-mode="social">محتوى تواصل اجتماعي</button>
+    </section>
+
+    <section class="workspace">
+      <div class="field">
+        <label for="inputText">النص الأصلي</label>
+        <textarea id="inputText" placeholder="اكتب نصك هنا أو الصقه..."></textarea>
+        <div class="actions">
+          <button class="primary" id="improveBtn">تحسين النص</button>
+          <button class="secondary" id="clearBtn">مسح</button>
+        </div>
+        <p class="status" id="status"></p>
+      </div>
+
+      <div class="field">
+        <label for="outputText">النص المحسّن</label>
+        <div class="output empty" id="outputText">ستظهر النتيجة هنا بعد التحسين.</div>
+        <div class="actions">
+          <button class="secondary" id="copyBtn">نسخ النتيجة</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>كاتب - نسخة تجريبية آمنة تعمل عبر API داخلي في Vercel.</p>
+  </footer>
+
+  <script>
+    const inputText = document.getElementById('inputText');
+    const outputText = document.getElementById('outputText');
+    const improveBtn = document.getElementById('improveBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const statusEl = document.getElementById('status');
+    const usageEl = document.getElementById('usage');
+    const modeButtons = document.querySelectorAll('.mode');
+
+    const DAILY_LIMIT = 5;
+    const todayKey = new Date().toISOString().slice(0, 10);
+    const usageKey = `katib_usage_${todayKey}`;
+    let selectedMode = 'grammar';
+
+    function getUsage() {
+      return Number(localStorage.getItem(usageKey) || '0');
+    }
+
+    function setUsage(count) {
+      localStorage.setItem(usageKey, String(count));
+      usageEl.textContent = `استخدامات اليوم: ${count} / ${DAILY_LIMIT}`;
+    }
+
+    function setStatus(message, type = '') {
+      statusEl.textContent = message;
+      statusEl.className = `status ${type}`.trim();
+    }
+
+    modeButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        modeButtons.forEach((btn) => btn.classList.remove('active'));
+        button.classList.add('active');
+        selectedMode = button.dataset.mode;
+      });
+    });
+
+    async function improveText(text, mode) {
+      const response = await fetch('/api/katib', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text, mode })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'حدث خطأ أثناء معالجة النص');
+      }
+
+      return data.result;
+    }
+
+    improveBtn.addEventListener('click', async () => {
+      const text = inputText.value.trim();
+      const currentUsage = getUsage();
+
+      if (!text) {
+        setStatus('اكتب نصًا أولًا قبل التحسين.', 'error');
+        return;
+      }
+
+      if (currentUsage >= DAILY_LIMIT) {
+        setStatus('وصلت إلى الحد اليومي في هذه النسخة التجريبية.', 'error');
+        return;
+      }
+
+      try {
+        improveBtn.disabled = true;
+        setStatus('جاري تحسين النص...');
+        outputText.textContent = 'انتظر قليلًا، يتم الآن معالجة النص.';
+        outputText.classList.add('empty');
+
+        const result = await improveText(text, selectedMode);
+        outputText.textContent = result || 'لم يتم إرجاع نتيجة.';
+        outputText.classList.remove('empty');
+        setUsage(currentUsage + 1);
+        setStatus('تم تحسين النص بنجاح.', 'success');
+      } catch (error) {
+        outputText.textContent = 'حدث خطأ أثناء التحسين.';
+        outputText.classList.add('empty');
+        setStatus(error.message, 'error');
+      } finally {
+        improveBtn.disabled = false;
+      }
+    });
+
+    clearBtn.addEventListener('click', () => {
+      inputText.value = '';
+      outputText.textContent = 'ستظهر النتيجة هنا بعد التحسين.';
+      outputText.classList.add('empty');
+      setStatus('');
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      const text = outputText.textContent.trim();
+      if (!text || outputText.classList.contains('empty')) {
+        setStatus('لا توجد نتيجة لنسخها.', 'error');
+        return;
+      }
+
+      await navigator.clipboard.writeText(text);
+      setStatus('تم نسخ النتيجة.', 'success');
+    });
+
+    setUsage(getUsage());
+  </script>
+</body>
+</html>
