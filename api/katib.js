@@ -35,7 +35,6 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'claude-3-haiku-20240307',
-,
         max_tokens: 1200,
         temperature: 0.4,
         system: instruction,
